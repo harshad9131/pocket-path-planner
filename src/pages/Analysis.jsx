@@ -2,27 +2,64 @@
 import { useState, useEffect } from 'react';
 import SpendingChart from '../components/SpendingChart';
 import MonthlyChart from '../components/MonthlyChart';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { 
   formatCurrency, 
   calculateTotalByType, 
   groupByCategory, 
   generateMonthlyData,
-  getLocalStorageItem
 } from '../lib/utils';
-import { initialTransactions } from '../lib/data';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+const fetchTransactionsData = async () => {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*')
+    .order('date', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+};
+
+const fetchUsersData = async () => {
+  const { data: { users }, error } = await supabase.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
+
+  if (error) {
+    console.error("Admin access required to view users");
+    return [];
+  }
+  
+  return users || [];
+};
 
 const Analysis = () => {
-  const [transactions, setTransactions] = useState([]);
   const [monthlyData, setMonthlyData] = useState({});
   const [selectedMonth, setSelectedMonth] = useState('All Time');
   
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: fetchTransactionsData
+  });
+
+  const { data: users = [], isLoading: usersLoading } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsersData,
+    onError: (error) => {
+      console.error("Error fetching users:", error);
+      // This will fail for non-admin users, which is expected
+    }
+  });
+  
   useEffect(() => {
-    const savedTransactions = getLocalStorageItem('transactions', initialTransactions);
-    setTransactions(savedTransactions);
-    
-    const monthData = generateMonthlyData(savedTransactions);
-    setMonthlyData(monthData);
-  }, []);
+    if (transactions.length > 0) {
+      const monthData = generateMonthlyData(transactions);
+      setMonthlyData(monthData);
+    }
+  }, [transactions]);
   
   const getFilteredTransactions = () => {
     if (selectedMonth === 'All Time') {
@@ -49,6 +86,8 @@ const Analysis = () => {
     'All Time', 'January', 'February', 'March', 'April', 'May', 'June', 
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+
+  const isAdmin = false; // In a real app, you would check if the user has admin privileges
   
   return (
     <div className="space-y-6">
@@ -92,10 +131,77 @@ const Analysis = () => {
       
       <div className="bg-white p-6 rounded-lg shadow-sm border">
         <h2 className="text-lg font-medium mb-4">Budget vs Actual Spending</h2>
-        <div className="flex items-center justify-center h-40">
-          <p className="text-gray-500">Set up your budget in the Budget page to see the comparison.</p>
-        </div>
+        {transactionsLoading ? (
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        ) : filteredTransactions.length > 0 ? (
+          <div className="overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Budgeted</TableHead>
+                  <TableHead>Actual</TableHead>
+                  <TableHead>Difference</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Object.entries(expensesByCategory).map(([category, amount]) => (
+                  <TableRow key={category}>
+                    <TableCell className="font-medium">{category}</TableCell>
+                    <TableCell>N/A</TableCell>
+                    <TableCell>{formatCurrency(amount)}</TableCell>
+                    <TableCell>N/A</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-40">
+            <p className="text-gray-500">Set up your budget in the Budget page to see the comparison.</p>
+          </div>
+        )}
       </div>
+      
+      {isAdmin && (
+        <div className="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 className="text-lg font-medium mb-4">User Management (Admin Only)</h2>
+          {usersLoading ? (
+            <div className="flex items-center justify-center h-40">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : users.length > 0 ? (
+            <div className="overflow-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead>Last Sign In</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {users.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.email}</TableCell>
+                      <TableCell>{user.id}</TableCell>
+                      <TableCell>{new Date(user.created_at).toLocaleString()}</TableCell>
+                      <TableCell>{user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : 'Never'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-40">
+              <p className="text-gray-500">No users found or admin access required.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

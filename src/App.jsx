@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Budget from "./pages/Budget";
 import Goals from "./pages/Goals";
+import Analysis from "./pages/Analysis";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -50,6 +51,13 @@ const App = () => (
               <ProtectedRoute>
                 <Layout>
                   <Goals />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/analysis" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Analysis />
                 </Layout>
               </ProtectedRoute>
             } />
