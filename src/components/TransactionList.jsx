@@ -1,61 +1,26 @@
 
-import { useState } from 'react';
 import { formatCurrency } from '../lib/utils';
 
 const TransactionList = ({ transactions, onEdit, onDelete }) => {
-  const [sortField, setSortField] = useState('date');
-  const [sortDirection, setSortDirection] = useState('desc');
-  
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-  
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    const direction = sortDirection === 'asc' ? 1 : -1;
-    
-    if (sortField === 'amount') {
-      return (a.amount - b.amount) * direction;
-    } 
-    else if (sortField === 'date') {
-      return (new Date(a.date) - new Date(b.date)) * direction;
-    }
-    else {
-      return a[sortField].localeCompare(b[sortField]) * direction;
-    }
-  });
-  
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left">
         <thead>
           <tr className="bg-gray-50 border-b">
-            <th onClick={() => handleSort('date')} className="px-6 py-3 cursor-pointer hover:bg-gray-100">
-              Date {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
-            </th>
-            <th onClick={() => handleSort('description')} className="px-6 py-3 cursor-pointer hover:bg-gray-100">
-              Description {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
-            </th>
-            <th onClick={() => handleSort('category')} className="px-6 py-3 cursor-pointer hover:bg-gray-100">
-              Category {sortField === 'category' && (sortDirection === 'asc' ? '↑' : '↓')}
-            </th>
-            <th onClick={() => handleSort('amount')} className="px-6 py-3 cursor-pointer hover:bg-gray-100">
-              Amount {sortField === 'amount' && (sortDirection === 'asc' ? '↑' : '↓')}
-            </th>
+            <th className="px-6 py-3">Date</th>
+            <th className="px-6 py-3">Description</th>
+            <th className="px-6 py-3">Category</th>
+            <th className="px-6 py-3">Amount</th>
             <th className="px-6 py-3">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {sortedTransactions.length === 0 ? (
+          {transactions.length === 0 ? (
             <tr>
               <td colSpan={5} className="px-6 py-4 text-center">No transactions found</td>
             </tr>
           ) : (
-            sortedTransactions.map((transaction) => (
+            transactions.map((transaction) => (
               <tr key={transaction.id} className="border-b hover:bg-gray-50">
                 <td className="px-6 py-4">{transaction.date}</td>
                 <td className="px-6 py-4">{transaction.description}</td>

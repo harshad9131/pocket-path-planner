@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "../lib/utils";
@@ -98,24 +99,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               ))}
             </ul>
           </nav>
-        </div>
-        
-        {/* User Account */}
-        <div className="p-4 border-t border-gray-200">
-          <div className={cn(
-            "flex items-center",
-            !isOpen && "justify-center"
-          )}>
-            <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-              U
-            </div>
-            {isOpen && (
-              <div className="ml-2">
-                <p className="text-sm font-medium text-gray-800">User</p>
-                <p className="text-xs text-gray-500">user@example.com</p>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </aside>
