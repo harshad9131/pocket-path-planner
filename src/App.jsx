@@ -1,9 +1,11 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/Transactions";
+import Budget from "./pages/Budget";
+import Goals from "./pages/Goals";
+import Analysis from "./pages/Analysis";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -11,17 +13,27 @@ const App = () => (
     <Routes>
       <Route path="/" element={
         <Layout>
-          <Home />
+          <Dashboard />
         </Layout>
       } />
-      <Route path="/about" element={
+      <Route path="/transactions" element={
         <Layout>
-          <About />
+          <Transactions />
         </Layout>
       } />
-      <Route path="/contact" element={
+      <Route path="/budget" element={
         <Layout>
-          <Contact />
+          <Budget />
+        </Layout>
+      } />
+      <Route path="/goals" element={
+        <Layout>
+          <Goals />
+        </Layout>
+      } />
+      <Route path="/analysis" element={
+        <Layout>
+          <Analysis />
         </Layout>
       } />
       <Route path="*" element={<NotFound />} />

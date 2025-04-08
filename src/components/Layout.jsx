@@ -30,7 +30,7 @@ const Layout = ({ children }) => {
         onClick={() => isMobile && isSidebarOpen && setIsSidebarOpen(false)}
       >
         <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-          <div className="flex justify-between items-center px-4 py-2">
+          <div className="flex justify-between items-center px-4 py-3">
             {isMobile && (
               <button
                 onClick={(e) => {
@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
               </button>
             )}
             <div className="ml-auto">
-              <span className="text-lg font-medium">Simple Website</span>
+              <span className="text-lg font-medium">SimpleBudget</span>
             </div>
           </div>
         </header>
