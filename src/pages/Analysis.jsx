@@ -1,18 +1,49 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { monthlyData } from '../data/mockData';
 
 const Analysis = () => {
-  // Transform the data for the chart
-  const chartData = Object.entries(monthlyData)
-    .map(([month, values]) => ({
-      name: month,
-      Income: values.income,
-      Expenses: values.expense,
-      Savings: values.savings
-    }))
-    .reverse(); // Display oldest to newest
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    // Load transactions from localStorage
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      const transactions = JSON.parse(savedTransactions);
+      
+      // Group transactions by month
+      const monthlyData = {};
+      
+      transactions.forEach(transaction => {
+        const date = new Date(transaction.date);
+        const month = date.toLocaleString('default', { month: 'short' });
+        
+        if (!monthlyData[month]) {
+          monthlyData[month] = { income: 0, expense: 0, savings: 0 };
+        }
+        
+        if (transaction.type === 'income') {
+          monthlyData[month].income += transaction.amount;
+        } else {
+          monthlyData[month].expense += transaction.amount;
+        }
+        
+        // Calculate savings
+        monthlyData[month].savings = monthlyData[month].income - monthlyData[month].expense;
+      });
+      
+      // Transform data for chart
+      const formattedData = Object.entries(monthlyData)
+        .map(([month, values]) => ({
+          name: month,
+          Income: values.income,
+          Expenses: values.expense,
+          Savings: values.savings
+        }));
+      
+      setChartData(formattedData);
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -42,7 +73,7 @@ const Analysis = () => {
             </ResponsiveContainer>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <p className="text-gray-500">No data available</p>
+              <p className="text-gray-500">No data available. Add transactions to see analysis.</p>
             </div>
           )}
         </div>

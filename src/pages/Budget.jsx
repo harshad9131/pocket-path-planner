@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatCurrency } from '../lib/utils';
 
 const Budget = () => {
@@ -11,8 +11,38 @@ const Budget = () => {
   const percentageSpent = monthlyBudget > 0 ? (spentAmount / monthlyBudget) * 100 : 0;
   const percentageRemaining = monthlyBudget > 0 ? 100 - percentageSpent : 0;
 
+  // Load budget from localStorage and calculate spent amount from transactions
+  useEffect(() => {
+    const savedBudget = localStorage.getItem('monthlyBudget');
+    if (savedBudget) {
+      setMonthlyBudget(parseFloat(savedBudget));
+    }
+    
+    // Calculate spent amount from this month's expense transactions
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      const transactions = JSON.parse(savedTransactions);
+      
+      // Get current month's expenses
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      
+      const monthlyExpenses = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        return t.type === 'expense' && 
+               transactionDate.getMonth() === currentMonth &&
+               transactionDate.getFullYear() === currentYear;
+      });
+      
+      const totalSpent = monthlyExpenses.reduce((sum, t) => sum + t.amount, 0);
+      setSpentAmount(totalSpent);
+    }
+  }, []);
+
   const handleBudgetSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem('monthlyBudget', monthlyBudget);
     setIsEditing(false);
   };
 
@@ -33,20 +63,6 @@ const Budget = () => {
                 min="0"
                 value={monthlyBudget}
                 onChange={(e) => setMonthlyBudget(Number(e.target.value))}
-                className="w-full border-gray-300 rounded-md shadow-sm p-2 border"
-              />
-            </div>
-            <div>
-              <label htmlFor="spentAmount" className="block text-sm font-medium text-gray-700 mb-1">
-                Amount Spent So Far
-              </label>
-              <input
-                type="number"
-                id="spentAmount"
-                min="0"
-                max={monthlyBudget}
-                value={spentAmount}
-                onChange={(e) => setSpentAmount(Number(e.target.value))}
                 className="w-full border-gray-300 rounded-md shadow-sm p-2 border"
               />
             </div>
@@ -77,7 +93,10 @@ const Budget = () => {
                 <span>Budget: {formatCurrency(monthlyBudget)}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: `${percentageSpent}%` }}></div>
+                <div 
+                  className={`h-2.5 rounded-full ${percentageSpent > 80 ? 'bg-red-500' : 'bg-blue-500'}`} 
+                  style={{ width: `${Math.min(percentageSpent, 100)}%` }}
+                ></div>
               </div>
             </div>
             

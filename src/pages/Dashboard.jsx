@@ -1,11 +1,49 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FinancialCard from '../components/FinancialCard';
 import TransactionList from '../components/TransactionList';
-import { recentTransactions, summary } from '../data/mockData';
 import { formatCurrency } from '../lib/utils';
 
 const Dashboard = () => {
+  const [summary, setSummary] = useState({
+    balance: 0,
+    income: 0,
+    expenses: 0
+  });
+  
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  
+  // Calculate summary from transactions
+  const calculateSummary = (transactions) => {
+    if (!transactions || transactions.length === 0) {
+      return { balance: 0, income: 0, expenses: 0 };
+    }
+    
+    const income = transactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+      
+    const expenses = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
+      
+    return {
+      income,
+      expenses,
+      balance: income - expenses
+    };
+  };
+  
+  // Load transactions and calculate summary
+  useEffect(() => {
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      const transactions = JSON.parse(savedTransactions);
+      setRecentTransactions(transactions.slice(-5).reverse()); // Get last 5 transactions
+      setSummary(calculateSummary(transactions));
+    }
+  }, []);
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Financial Dashboard</h1>
@@ -52,7 +90,13 @@ const Dashboard = () => {
           <h2 className="text-lg font-medium">Recent Transactions</h2>
           <a href="/transactions" className="text-blue-500 hover:underline text-sm">View All</a>
         </div>
-        <TransactionList transactions={recentTransactions} />
+        {recentTransactions.length === 0 ? (
+          <div className="p-6 text-center text-gray-500">
+            No transactions yet. Add your first transaction on the Transactions page.
+          </div>
+        ) : (
+          <TransactionList transactions={recentTransactions} />
+        )}
       </div>
     </div>
   );
