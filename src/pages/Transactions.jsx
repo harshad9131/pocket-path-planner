@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
 import TransactionList from '../components/TransactionList';
-import { allTransactions } from '../data/mockData';
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState(allTransactions);
+  const [transactions, setTransactions] = useState([]);
   
   // Simple handlers for editing and deleting transactions
   const handleEditTransaction = (id) => {
@@ -25,11 +24,17 @@ const Transactions = () => {
       </div>
       
       <div className="bg-white rounded-lg shadow">
-        <TransactionList 
-          transactions={transactions} 
-          onEdit={handleEditTransaction}
-          onDelete={handleDeleteTransaction}
-        />
+        {transactions.length === 0 ? (
+          <div className="p-6 text-center text-gray-500">
+            No transactions yet. Add your first transaction using the button above.
+          </div>
+        ) : (
+          <TransactionList 
+            transactions={transactions} 
+            onEdit={handleEditTransaction}
+            onDelete={handleDeleteTransaction}
+          />
+        )}
       </div>
     </div>
   );

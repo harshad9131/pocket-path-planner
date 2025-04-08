@@ -3,6 +3,7 @@ import React from 'react';
 import FinancialCard from '../components/FinancialCard';
 import TransactionList from '../components/TransactionList';
 import { recentTransactions, summary } from '../data/mockData';
+import { formatCurrency } from '../lib/utils';
 
 const Dashboard = () => {
   return (
@@ -13,7 +14,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <FinancialCard 
           title="Total Balance" 
-          value={`$${summary.balance.toFixed(2)}`}
+          value={formatCurrency(summary.balance)}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -23,7 +24,7 @@ const Dashboard = () => {
         />
         <FinancialCard 
           title="Monthly Income" 
-          value={`$${summary.income.toFixed(2)}`} 
+          value={formatCurrency(summary.income)}
           trend="up"
           trendValue="8.2%"
           icon={
@@ -34,7 +35,7 @@ const Dashboard = () => {
         />
         <FinancialCard 
           title="Monthly Expenses" 
-          value={`$${summary.expenses.toFixed(2)}`}
+          value={formatCurrency(summary.expenses)}
           trend="down"
           trendValue="3.1%"
           icon={

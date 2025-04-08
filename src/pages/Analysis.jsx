@@ -1,61 +1,50 @@
 
 import React from 'react';
-import MonthlyChart from '../components/MonthlyChart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { monthlyData } from '../data/mockData';
 
 const Analysis = () => {
+  // Transform the data for the chart
+  const chartData = Object.entries(monthlyData)
+    .map(([month, values]) => ({
+      name: month,
+      Income: values.income,
+      Expenses: values.expense,
+      Savings: values.savings
+    }))
+    .reverse(); // Display oldest to newest
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Financial Analysis</h1>
       
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-lg font-medium mb-4">Monthly Overview</h2>
-        <MonthlyChart data={monthlyData} />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-medium mb-4">Top Spending Categories</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span>Housing</span>
-              <span className="font-medium">$1,200.00</span>
+        <div className="w-full h-80">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={chartData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Bar dataKey="Income" fill="#0EA5E9" />
+                <Bar dataKey="Expenses" fill="#EF4444" />
+                <Bar dataKey="Savings" fill="#10B981" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-500">No data available</p>
             </div>
-            <div className="flex justify-between">
-              <span>Food</span>
-              <span className="font-medium">$450.00</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Transportation</span>
-              <span className="font-medium">$350.00</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Entertainment</span>
-              <span className="font-medium">$200.00</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Utilities</span>
-              <span className="font-medium">$180.00</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-medium mb-4">Insights</h2>
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-md">
-              <h3 className="font-medium text-blue-700 mb-1">Spending Trend</h3>
-              <p className="text-sm text-gray-600">Your spending has decreased by 5% compared to last month.</p>
-            </div>
-            <div className="p-4 bg-green-50 rounded-md">
-              <h3 className="font-medium text-green-700 mb-1">Savings Rate</h3>
-              <p className="text-sm text-gray-600">You're saving 15% of your income, which is on track with your goals.</p>
-            </div>
-            <div className="p-4 bg-yellow-50 rounded-md">
-              <h3 className="font-medium text-yellow-700 mb-1">Budget Alert</h3>
-              <p className="text-sm text-gray-600">You're close to your entertainment budget limit this month.</p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
