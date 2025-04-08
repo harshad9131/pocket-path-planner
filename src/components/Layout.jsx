@@ -1,17 +1,12 @@
 
 import { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "./SimpleSidebar";
 import { cn } from "../lib/utils";
 import { useIsMobile } from "../hooks/use-mobile";
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const isMobile = useIsMobile();
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   
   useEffect(() => {
     if (isMobile) {
@@ -20,12 +15,6 @@ const Layout = ({ children }) => {
       setIsSidebarOpen(true);
     }
   }, [isMobile]);
-  
-  const handleSignOut = async () => {
-    await signOut();
-    toast.success("Successfully signed out");
-    navigate("/auth");
-  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -55,16 +44,8 @@ const Layout = ({ children }) => {
                 </svg>
               </button>
             )}
-            <div className="ml-auto flex items-center space-x-2">
-              <span className="text-sm text-gray-600">
-                {user?.email}
-              </span>
-              <button
-                onClick={handleSignOut}
-                className="p-2 text-sm text-gray-600 hover:text-primary"
-              >
-                Sign Out
-              </button>
+            <div className="ml-auto">
+              <span className="text-lg font-medium">Simple Website</span>
             </div>
           </div>
         </header>
