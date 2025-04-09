@@ -8,6 +8,8 @@ import Goals from "./pages/Goals";
 import Analysis from "./pages/Analysis";
 import NotFound from "./pages/NotFound";
 import { ToastProvider } from "./hooks/use-toast";
+import "./App.css";
+import "./pages/Dashboard.css";
 
 const App = () => (
   <ToastProvider>

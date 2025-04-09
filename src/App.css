@@ -6,7 +6,6 @@
   text-align: center;
 }
 
-/* Remove Tailwind specific styles and keep only what we need */
 .card {
   padding: 2rem;
   background-color: white;
