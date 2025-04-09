@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
               </button>
             )}
             <div className="ml-auto">
-              <span className="text-lg font-medium">SimpleBudget</span>
+              <span className="text-lg font-medium">Pocket Finance</span>
             </div>
           </div>
         </header>
