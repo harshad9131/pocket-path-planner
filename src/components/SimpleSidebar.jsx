@@ -57,7 +57,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       <div className="sidebar-container">
         {/* Logo */}
         <div className={isOpen ? "sidebar-header open" : "sidebar-header collapsed"}>
-          {isOpen && <h1 className="sidebar-title">SimpleBudget</h1>}
+          {isOpen && <h1 className="sidebar-title">Pocket Finance</h1>}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="toggle-button"
