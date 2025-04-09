@@ -1,0 +1,107 @@
+
+.toast-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s;
+}
+
+.toast.success {
+  background-color: var(--success);
+  color: var(--success-foreground);
+}
+
+.toast.error {
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.toast.warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.toast.info {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.toast.default {
+  background-color: white;
+  color: var(--foreground);
+}
+
+.toast-title {
+  font-weight: 600;
+}
+
+.toast-description {
+  font-size: 0.875rem;
+}
+
+.toast-close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.toast-close-button:hover {
+  opacity: 1;
+}
+
+.toast-animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-animate-out {
+  opacity: 0;
+  transform: translateY(0.5rem);
+}
+
+.toast-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.toast-fade-out {
+  animation: fadeOut 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}

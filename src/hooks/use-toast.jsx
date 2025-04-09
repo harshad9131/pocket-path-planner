@@ -1,5 +1,6 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
+import "./toast.css";
 
 const ToastContext = createContext({
   toast: () => {},
@@ -46,24 +47,17 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ toast, dismiss, toasts }}>
       {children}
-      <div className="toast-container fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <div className="toast-container">
         {toasts.map(toast => (
           <div 
             key={toast.id}
-            className={`toast p-4 rounded-lg shadow-lg transition-all transform 
-              ${toast.open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
-              ${toast.type === 'success' ? 'bg-green-500 text-white' : ''}
-              ${toast.type === 'error' ? 'bg-red-500 text-white' : ''}
-              ${toast.type === 'warning' ? 'bg-yellow-500 text-white' : ''}
-              ${toast.type === 'info' ? 'bg-blue-500 text-white' : ''}
-              ${toast.type === 'default' ? 'bg-white' : ''}
-            `}
+            className={`toast ${toast.type} ${toast.open ? 'toast-animate-in' : 'toast-animate-out'}`}
           >
-            {toast.title && <div className="font-semibold">{toast.title}</div>}
-            {toast.description && <div className="text-sm">{toast.description}</div>}
+            {toast.title && <div className="toast-title">{toast.title}</div>}
+            {toast.description && <div className="toast-description">{toast.description}</div>}
             <button 
               onClick={() => dismiss(toast.id)}
-              className="absolute top-2 right-2 text-sm font-bold"
+              className="toast-close-button"
             >
               &times;
             </button>
@@ -92,18 +86,22 @@ export const toast = (props) => {
   
   // Create a simple DOM element for the toast
   const toastElement = document.createElement('div');
-  toastElement.className = `fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg bg-white animate-in fade-in`;
+  toastElement.className = `toast ${props.type || 'default'} toast-fade-in`;
+  toastElement.style.position = "fixed";
+  toastElement.style.bottom = "1rem";
+  toastElement.style.right = "1rem";
+  toastElement.style.zIndex = "50";
   
   if (props.title) {
     const titleElement = document.createElement('div');
-    titleElement.className = "font-semibold";
+    titleElement.className = "toast-title";
     titleElement.textContent = props.title;
     toastElement.appendChild(titleElement);
   }
   
   if (props.description) {
     const descElement = document.createElement('div');
-    descElement.className = "text-sm";
+    descElement.className = "toast-description";
     descElement.textContent = props.description;
     toastElement.appendChild(descElement);
   }
@@ -112,7 +110,7 @@ export const toast = (props) => {
   
   // Remove after duration
   setTimeout(() => {
-    toastElement.classList.add('animate-out', 'fade-out');
+    toastElement.classList.add('toast-fade-out');
     setTimeout(() => {
       document.body.removeChild(toastElement);
     }, 300);
