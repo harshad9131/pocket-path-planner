@@ -1,9 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import MonthlyChart from '../components/MonthlyChart';
+import SpendingChart from '../components/SpendingChart';
 
 const Analysis = () => {
-  const [chartData, setChartData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState({});
+  const [categoryData, setCategoryData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Load transactions from localStorage
@@ -12,37 +15,41 @@ const Analysis = () => {
       const transactions = JSON.parse(savedTransactions);
       
       // Group transactions by month
-      const monthlyData = {};
+      const monthlyDataMap = {};
+      const categoryDataMap = {};
       
       transactions.forEach(transaction => {
         const date = new Date(transaction.date);
         const month = date.toLocaleString('default', { month: 'short' });
         
-        if (!monthlyData[month]) {
-          monthlyData[month] = { income: 0, expense: 0, savings: 0 };
+        // Monthly data processing
+        if (!monthlyDataMap[month]) {
+          monthlyDataMap[month] = { income: 0, expense: 0, savings: 0 };
         }
         
         if (transaction.type === 'income') {
-          monthlyData[month].income += transaction.amount;
+          monthlyDataMap[month].income += transaction.amount;
         } else {
-          monthlyData[month].expense += transaction.amount;
+          monthlyDataMap[month].expense += transaction.amount;
         }
         
         // Calculate savings
-        monthlyData[month].savings = monthlyData[month].income - monthlyData[month].expense;
+        monthlyDataMap[month].savings = monthlyDataMap[month].income - monthlyDataMap[month].expense;
+        
+        // Category data processing (for expense categories)
+        if (transaction.type === 'expense' && transaction.category) {
+          if (!categoryDataMap[transaction.category]) {
+            categoryDataMap[transaction.category] = 0;
+          }
+          categoryDataMap[transaction.category] += transaction.amount;
+        }
       });
       
-      // Transform data for chart
-      const formattedData = Object.entries(monthlyData)
-        .map(([month, values]) => ({
-          name: month,
-          Income: values.income,
-          Expenses: values.expense,
-          Savings: values.savings
-        }));
-      
-      setChartData(formattedData);
+      setMonthlyData(monthlyDataMap);
+      setCategoryData(categoryDataMap);
     }
+    
+    setIsLoading(false);
   }, []);
 
   return (
@@ -51,32 +58,32 @@ const Analysis = () => {
       
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-lg font-medium mb-4">Monthly Overview</h2>
-        <div className="w-full h-80">
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Bar dataKey="Income" fill="#0EA5E9" />
-                <Bar dataKey="Expenses" fill="#EF4444" />
-                <Bar dataKey="Savings" fill="#10B981" />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-gray-500">No data available. Add transactions to see analysis.</p>
-            </div>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-80">
+            <p className="text-gray-500">Loading data...</p>
+          </div>
+        ) : Object.keys(monthlyData).length > 0 ? (
+          <MonthlyChart data={monthlyData} />
+        ) : (
+          <div className="flex items-center justify-center h-80">
+            <p className="text-gray-500">No data available. Add transactions to see analysis.</p>
+          </div>
+        )}
+      </div>
+      
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-lg font-medium mb-4">Expense Categories</h2>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-gray-500">Loading data...</p>
+          </div>
+        ) : Object.keys(categoryData).length > 0 ? (
+          <SpendingChart data={categoryData} />
+        ) : (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-gray-500">No expense categories found. Add categorized transactions to see analysis.</p>
+          </div>
+        )}
       </div>
     </div>
   );
