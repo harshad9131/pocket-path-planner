@@ -47,6 +47,26 @@
   font-weight: 700;
 }
 
+.charts-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .charts-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chart-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .recent-transactions {
   background-color: white;
   border-radius: 0.5rem;
