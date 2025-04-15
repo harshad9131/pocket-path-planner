@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { formatCurrency } from '../lib/utils';
 import TransactionList from '../components/TransactionList';
 import MonthlyChart from '../components/MonthlyChart';
 import SpendingChart from '../components/SpendingChart';
+import './Dashboard.css';
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -81,7 +81,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>
+      <h1 className="dashboard-title">Financial Overview</h1>
       
       {/* Summary Cards */}
       <div className="summary-cards">
@@ -96,7 +96,7 @@ const Dashboard = () => {
         </div>
         
         <div className="summary-card balance-card">
-          <h2 className="summary-card-title">Balance</h2>
+          <h2 className="summary-card-title">Current Balance</h2>
           <p className="summary-card-value">{formatCurrency(balance)}</p>
         </div>
       </div>
@@ -104,31 +104,35 @@ const Dashboard = () => {
       {/* Charts Section */}
       <div className="charts-section">
         <div className="chart-container">
-          <h2 className="section-title">Monthly Overview</h2>
+          <div className="section-header">
+            <h2 className="section-title">Monthly Overview</h2>
+          </div>
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500">Loading data...</p>
+            <div className="loading-container">
+              <p>Loading your financial data...</p>
             </div>
           ) : Object.keys(monthlyData).length > 0 ? (
             <MonthlyChart data={monthlyData} />
           ) : (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500">No data available. Add transactions to see analysis.</p>
+            <div className="empty-state">
+              <p>No data available. Add transactions to see your monthly analysis.</p>
             </div>
           )}
         </div>
         
         <div className="chart-container">
-          <h2 className="section-title">Expense Categories</h2>
+          <div className="section-header">
+            <h2 className="section-title">Expense Categories</h2>
+          </div>
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500">Loading data...</p>
+            <div className="loading-container">
+              <p>Loading your expense data...</p>
             </div>
           ) : Object.keys(categoryData).length > 0 ? (
             <SpendingChart data={categoryData} />
           ) : (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500">No expense categories found. Add categorized transactions to see analysis.</p>
+            <div className="empty-state">
+              <p>No expense categories found. Add categorized transactions to view your spending patterns.</p>
             </div>
           )}
         </div>
@@ -138,12 +142,21 @@ const Dashboard = () => {
       <div className="recent-transactions">
         <div className="section-header">
           <h2 className="section-title">Recent Transactions</h2>
-          <a href="/transactions" className="view-all-link">View All</a>
+          <a href="/transactions" className="view-all-link">
+            View All
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: '1rem', height: '1rem', marginLeft: '0.25rem' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </a>
         </div>
         
-        <TransactionList transactions={transactions} />
-        
-        {transactions.length === 0 && (
+        {isLoading ? (
+          <div className="loading-container">
+            <p>Loading your recent transactions...</p>
+          </div>
+        ) : transactions.length > 0 ? (
+          <TransactionList transactions={transactions} />
+        ) : (
           <div className="empty-state">
             <p>No transactions yet. Add your first transaction to get started.</p>
           </div>
