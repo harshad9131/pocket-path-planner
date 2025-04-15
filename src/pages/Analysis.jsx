@@ -254,10 +254,10 @@ const Analysis = () => {
         <p className="text-blue-600">
           Your current savings rate is <strong>{savingsRate.toFixed(1)}%</strong> 
           {savingsRate >= 20 
-            ? ' – Great job! You're saving a healthy portion of your income.'
+            ? " – Great job! You're saving a healthy portion of your income."
             : savingsRate >= 10
-              ? ' – You're on the right track. Aim for 20% or more for long-term financial health.'
-              : ' – Consider finding ways to increase your savings rate to at least 10-20% of your income.'}
+              ? " – You're on the right track. Aim for 20% or more for long-term financial health."
+              : " – Consider finding ways to increase your savings rate to at least 10-20% of your income."}
         </p>
       </div>
     );
@@ -274,8 +274,8 @@ const Analysis = () => {
             Your largest expense category is <strong>{largestCategory[0]}</strong>, 
             accounting for <strong>{percentage.toFixed(1)}%</strong> of your total expenses.
             {percentage > 30 
-              ? ' Consider if you can reduce spending in this category.'
-              : ' This appears to be a reasonable proportion of your budget.'}
+              ? " Consider if you can reduce spending in this category."
+              : " This appears to be a reasonable proportion of your budget."}
           </p>
         </div>
       );
