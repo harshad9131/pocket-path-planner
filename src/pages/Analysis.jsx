@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MonthlyChart from '../components/MonthlyChart';
 import SpendingChart from '../components/SpendingChart';
-import { Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw, BarChart2, PieChart } from 'lucide-react';
 
 const Analysis = () => {
   const [monthlyData, setMonthlyData] = useState({});
@@ -111,9 +111,9 @@ const Analysis = () => {
             <button
               type="button"
               onClick={() => setPeriod('all')}
-              className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+              className={`px-4 py-2 text-sm font-medium rounded-l-lg transition-all shadow ${
                 period === 'all' 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               } border border-gray-200`}
             >
@@ -122,9 +122,9 @@ const Analysis = () => {
             <button
               type="button"
               onClick={() => setPeriod('6months')}
-              className={`px-4 py-2 text-sm font-medium ${
+              className={`px-4 py-2 text-sm font-medium transition-all shadow ${
                 period === '6months' 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               } border-t border-b border-gray-200`}
             >
@@ -133,9 +133,9 @@ const Analysis = () => {
             <button
               type="button"
               onClick={() => setPeriod('3months')}
-              className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+              className={`px-4 py-2 text-sm font-medium rounded-r-lg transition-all shadow ${
                 period === '3months' 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               } border border-gray-200`}
             >
@@ -145,7 +145,7 @@ const Analysis = () => {
           
           <button
             onClick={handleRefresh}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-primary transition-colors"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-lg shadow transition-all transform hover:scale-105"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
@@ -153,7 +153,7 @@ const Analysis = () => {
           
           <button
             onClick={handleExportData}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-success rounded-lg hover:bg-success/90 transition-colors"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 rounded-lg shadow transition-all transform hover:scale-105"
           >
             <Download className="mr-2 h-4 w-4" />
             Export
@@ -162,8 +162,9 @@ const Analysis = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg">
+        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100">
           <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+            <BarChart2 className="mr-2 h-5 w-5 text-blue-500" />
             Monthly Overview
             <span className="ml-2 text-xs font-normal text-gray-500">
               {period === 'all' ? 'All time' : period === '3months' ? 'Last 3 months' : 'Last 6 months'}
@@ -172,12 +173,12 @@ const Analysis = () => {
           {isLoading ? (
             <div className="flex items-center justify-center h-80 bg-gray-50 rounded-lg">
               <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
                 <p className="text-gray-500 mt-4">Loading your financial data...</p>
               </div>
             </div>
           ) : Object.keys(monthlyData).length > 0 ? (
-            <div className="h-80">
+            <div className="h-80 w-full">
               <MonthlyChart data={monthlyData} />
             </div>
           ) : (
@@ -188,17 +189,20 @@ const Analysis = () => {
           )}
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg">
-          <h2 className="text-lg font-medium mb-4 text-gray-800">Expense Categories</h2>
+        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100">
+          <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+            <PieChart className="mr-2 h-5 w-5 text-amber-500" />
+            Expense Categories
+          </h2>
           {isLoading ? (
             <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
               <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
                 <p className="text-gray-500 mt-4">Loading your expense data...</p>
               </div>
             </div>
           ) : Object.keys(categoryData).length > 0 ? (
-            <div className="h-64">
+            <div className="h-64 w-full">
               <SpendingChart data={categoryData} />
             </div>
           ) : (
@@ -210,7 +214,7 @@ const Analysis = () => {
         </div>
       </div>
       
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
         <h2 className="text-lg font-medium mb-4 text-gray-800">Financial Insights</h2>
         
         {isLoading ? (
@@ -249,7 +253,7 @@ const Analysis = () => {
     
     // Add insights based on the data
     insights.push(
-      <div key="savings-rate" className="p-4 bg-blue-50 rounded-lg">
+      <div key="savings-rate" className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500 shadow-sm">
         <h3 className="font-medium text-blue-800">Savings Rate</h3>
         <p className="text-blue-600">
           Your current savings rate is <strong>{savingsRate.toFixed(1)}%</strong> 
@@ -268,7 +272,7 @@ const Analysis = () => {
       const percentage = (largestCategory[1] / totalExpenses) * 100;
       
       insights.push(
-        <div key="largest-expense" className="p-4 bg-amber-50 rounded-lg">
+        <div key="largest-expense" className="p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500 shadow-sm">
           <h3 className="font-medium text-amber-800">Largest Expense Category</h3>
           <p className="text-amber-600">
             Your largest expense category is <strong>{largestCategory[0]}</strong>, 
@@ -284,7 +288,7 @@ const Analysis = () => {
     // Add a general insight based on months with data
     if (Object.keys(monthlyData).length > 1) {
       insights.push(
-        <div key="spending-trend" className="p-4 bg-green-50 rounded-lg">
+        <div key="spending-trend" className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500 shadow-sm">
           <h3 className="font-medium text-green-800">Spending Trends</h3>
           <p className="text-green-600">
             You have financial data for {Object.keys(monthlyData).length} months. 

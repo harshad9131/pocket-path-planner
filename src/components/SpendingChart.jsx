@@ -53,6 +53,8 @@ const SpendingChart = ({ data }) => {
               dataKey="value"
               stroke="var(--background)"
               strokeWidth={2}
+              animationBegin={200}
+              animationDuration={800}
             >
               {chartData.map((entry, index) => (
                 <Cell 
@@ -62,7 +64,16 @@ const SpendingChart = ({ data }) => {
                 />
               ))}
             </Pie>
-            <Tooltip formatter={tooltipFormatter} />
+            <Tooltip 
+              formatter={tooltipFormatter} 
+              contentStyle={{ 
+                backgroundColor: 'var(--card)',
+                borderColor: 'var(--border)',
+                borderRadius: '0.375rem',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+              }}
+              wrapperStyle={{ zIndex: 1000 }}
+            />
             <Legend 
               layout="horizontal" 
               verticalAlign="bottom" 

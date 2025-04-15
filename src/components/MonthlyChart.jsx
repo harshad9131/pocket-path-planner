@@ -53,6 +53,7 @@ const MonthlyChart = ({ data }) => {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
               }}
               cursor={{ fill: 'var(--muted)', opacity: 0.2 }}
+              wrapperStyle={{ zIndex: 1000 }}
             />
             <Legend 
               wrapperStyle={{ paddingTop: 10 }}
@@ -60,19 +61,19 @@ const MonthlyChart = ({ data }) => {
             />
             <Bar 
               dataKey="Income" 
-              fill="var(--success)" 
+              fill="#22c55e" /* Green */
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
             />
             <Bar 
               dataKey="Expenses" 
-              fill="var(--destructive)" 
+              fill="#ef4444" /* Red */
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
             />
             <Bar 
               dataKey="Savings" 
-              fill="var(--primary)" 
+              fill="#0ea5e9" /* Blue */
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
             />
