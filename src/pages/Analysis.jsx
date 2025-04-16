@@ -105,7 +105,7 @@ const Analysis = () => {
   };
 
   return (
-    <div className="space-y-6 pb-6 max-w-[1200px] mx-auto px-4">
+    <div className="space-y-8 pb-6 max-w-[1200px] mx-auto px-4 md:px-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-800 relative pb-2">
           Financial Analysis
@@ -119,7 +119,7 @@ const Analysis = () => {
               onClick={() => setPeriod('all')}
               className={`px-4 py-2 text-sm font-medium rounded-l-lg transition-all ${
                 period === 'all' 
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg hover:from-indigo-700 hover:to-indigo-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
               }`}
             >
@@ -131,7 +131,7 @@ const Analysis = () => {
               onClick={() => setPeriod('6months')}
               className={`px-4 py-2 text-sm font-medium transition-all ${
                 period === '6months' 
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg hover:from-indigo-700 hover:to-indigo-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-50 border-t border-b border-gray-200'
               }`}
             >
@@ -143,7 +143,7 @@ const Analysis = () => {
               onClick={() => setPeriod('3months')}
               className={`px-4 py-2 text-sm font-medium rounded-r-lg transition-all ${
                 period === '3months' 
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg hover:from-indigo-700 hover:to-indigo-600' 
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
               }`}
             >
@@ -154,7 +154,7 @@ const Analysis = () => {
           
           <button
             onClick={handleRefresh}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 rounded-lg shadow transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg shadow transition-all"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
@@ -162,7 +162,7 @@ const Analysis = () => {
           
           <button
             onClick={handleExportData}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 rounded-lg shadow transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 rounded-lg shadow transition-all"
           >
             <Download className="mr-2 h-4 w-4" />
             Export
@@ -170,15 +170,16 @@ const Analysis = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100 transform hover:-translate-y-1 duration-300">
-          <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
+          <h2 className="text-lg font-medium mb-6 text-gray-800 flex items-center">
             <BarChart2 className="mr-2 h-5 w-5 text-blue-500" />
             Monthly Overview
             <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
               {period === 'all' ? 'All time' : period === '3months' ? 'Last 3 months' : 'Last 6 months'}
             </span>
           </h2>
+          
           {isLoading ? (
             <div className="flex items-center justify-center h-80 bg-gray-50 rounded-lg">
               <div className="flex flex-col items-center">
@@ -198,24 +199,25 @@ const Analysis = () => {
           )}
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100 transform hover:-translate-y-1 duration-300">
-          <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
+          <h2 className="text-lg font-medium mb-6 text-gray-800 flex items-center">
             <PieChart className="mr-2 h-5 w-5 text-amber-500" />
             Expense Categories
           </h2>
+          
           {isLoading ? (
-            <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-center h-80 bg-gray-50 rounded-lg">
               <div className="flex flex-col items-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
                 <p className="text-gray-500 mt-4">Loading your expense data...</p>
               </div>
             </div>
           ) : Object.keys(categoryData).length > 0 ? (
-            <div className="h-64 w-full">
+            <div className="h-80 w-full">
               <SpendingChart data={categoryData} />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-64 bg-gray-50 rounded-lg">
+            <div className="flex flex-col items-center justify-center h-80 bg-gray-50 rounded-lg">
               <p className="text-gray-500 mb-2">No expense categories found for this period.</p>
               <p className="text-sm text-gray-400">Add categorized transactions to see your spending patterns.</p>
             </div>
@@ -223,8 +225,8 @@ const Analysis = () => {
         </div>
       </div>
       
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 transition-all hover:shadow-lg transform hover:-translate-y-1 duration-300">
-        <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
+        <h2 className="text-lg font-medium mb-6 text-gray-800 flex items-center">
           <TrendingUp className="mr-2 h-5 w-5 text-purple-500" />
           Financial Insights
         </h2>

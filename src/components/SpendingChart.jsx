@@ -37,7 +37,7 @@ const SpendingChart = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-[350px] flex items-center justify-center">
+    <div className="w-full h-[400px] flex items-center justify-center">
       {chartData.length > 0 ? (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -86,7 +86,7 @@ const SpendingChart = ({ data }) => {
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg">
+        <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-inner">
           <p className="text-gray-500 font-medium">No data available</p>
         </div>
       )}

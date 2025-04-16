@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const MonthlyChart = ({ data }) => {
@@ -18,10 +18,8 @@ const MonthlyChart = ({ data }) => {
     return [`$${value.toFixed(2)}`, name];
   };
 
-  const containerRef = useRef(null);
-
   return (
-    <div className="w-full h-[350px] relative" ref={containerRef}>
+    <div className="w-full h-[400px] relative">
       {chartData.length > 0 ? (
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -29,7 +27,7 @@ const MonthlyChart = ({ data }) => {
             margin={{
               top: 20,
               right: 30,
-              left: 20,
+              left: 30,
               bottom: 20,
             }}
             barGap={2}
