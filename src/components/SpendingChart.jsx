@@ -37,7 +37,7 @@ const SpendingChart = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-[350px]">
       {chartData.length > 0 ? (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -54,7 +54,7 @@ const SpendingChart = ({ data }) => {
               stroke="var(--background)"
               strokeWidth={2}
               animationBegin={200}
-              animationDuration={800}
+              animationDuration={1000}
             >
               {chartData.map((entry, index) => (
                 <Cell 
@@ -70,7 +70,8 @@ const SpendingChart = ({ data }) => {
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',
                 borderRadius: '0.375rem',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                padding: '10px'
               }}
               wrapperStyle={{ zIndex: 1000 }}
             />
@@ -79,11 +80,13 @@ const SpendingChart = ({ data }) => {
               verticalAlign="bottom" 
               align="center"
               wrapperStyle={{ paddingTop: 20 }}
+              iconType="circle"
+              iconSize={10}
             />
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-full bg-gray-50 rounded-lg">
           <p className="text-gray-500">No data available</p>
         </div>
       )}

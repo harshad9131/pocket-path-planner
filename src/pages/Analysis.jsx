@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MonthlyChart from '../components/MonthlyChart';
 import SpendingChart from '../components/SpendingChart';
-import { Download, RefreshCw, BarChart2, PieChart } from 'lucide-react';
+import { Download, RefreshCw, BarChart2, PieChart, Calendar, TrendingUp } from 'lucide-react';
 
 const Analysis = () => {
   const [monthlyData, setMonthlyData] = useState({});
@@ -17,50 +17,53 @@ const Analysis = () => {
   const loadTransactionData = () => {
     setIsLoading(true);
     
-    // Load transactions from localStorage
-    const savedTransactions = localStorage.getItem('transactions');
-    if (savedTransactions) {
-      const transactions = JSON.parse(savedTransactions);
-      
-      // Filter transactions based on selected period
-      const filteredTransactions = filterTransactionsByPeriod(transactions, period);
-      
-      // Group transactions by month
-      const monthlyDataMap = {};
-      const categoryDataMap = {};
-      
-      filteredTransactions.forEach(transaction => {
-        const date = new Date(transaction.date);
-        const month = date.toLocaleString('default', { month: 'short' });
+    // Simulate network delay for smooth transitions
+    setTimeout(() => {
+      // Load transactions from localStorage
+      const savedTransactions = localStorage.getItem('transactions');
+      if (savedTransactions) {
+        const transactions = JSON.parse(savedTransactions);
         
-        // Monthly data processing
-        if (!monthlyDataMap[month]) {
-          monthlyDataMap[month] = { income: 0, expense: 0, savings: 0 };
-        }
+        // Filter transactions based on selected period
+        const filteredTransactions = filterTransactionsByPeriod(transactions, period);
         
-        if (transaction.type === 'income') {
-          monthlyDataMap[month].income += transaction.amount;
-        } else {
-          monthlyDataMap[month].expense += transaction.amount;
-        }
+        // Group transactions by month
+        const monthlyDataMap = {};
+        const categoryDataMap = {};
         
-        // Calculate savings
-        monthlyDataMap[month].savings = monthlyDataMap[month].income - monthlyDataMap[month].expense;
-        
-        // Category data processing (for expense categories)
-        if (transaction.type === 'expense' && transaction.category) {
-          if (!categoryDataMap[transaction.category]) {
-            categoryDataMap[transaction.category] = 0;
+        filteredTransactions.forEach(transaction => {
+          const date = new Date(transaction.date);
+          const month = date.toLocaleString('default', { month: 'short' });
+          
+          // Monthly data processing
+          if (!monthlyDataMap[month]) {
+            monthlyDataMap[month] = { income: 0, expense: 0, savings: 0 };
           }
-          categoryDataMap[transaction.category] += transaction.amount;
-        }
-      });
+          
+          if (transaction.type === 'income') {
+            monthlyDataMap[month].income += transaction.amount;
+          } else {
+            monthlyDataMap[month].expense += transaction.amount;
+          }
+          
+          // Calculate savings
+          monthlyDataMap[month].savings = monthlyDataMap[month].income - monthlyDataMap[month].expense;
+          
+          // Category data processing (for expense categories)
+          if (transaction.type === 'expense' && transaction.category) {
+            if (!categoryDataMap[transaction.category]) {
+              categoryDataMap[transaction.category] = 0;
+            }
+            categoryDataMap[transaction.category] += transaction.amount;
+          }
+        });
+        
+        setMonthlyData(monthlyDataMap);
+        setCategoryData(categoryDataMap);
+      }
       
-      setMonthlyData(monthlyDataMap);
-      setCategoryData(categoryDataMap);
-    }
-    
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 600);  
   };
 
   const filterTransactionsByPeriod = (transactions, selectedPeriod) => {
@@ -102,50 +105,56 @@ const Analysis = () => {
   };
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-6 pb-6 max-w-[1200px] mx-auto px-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Financial Analysis</h1>
+        <h1 className="text-2xl font-bold text-gray-800 relative pb-2">
+          Financial Analysis
+          <span className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"></span>
+        </h1>
         
         <div className="flex flex-wrap gap-2">
           <div className="inline-flex rounded-md shadow-sm" role="group">
             <button
               type="button"
               onClick={() => setPeriod('all')}
-              className={`px-4 py-2 text-sm font-medium rounded-l-lg transition-all shadow ${
+              className={`px-4 py-2 text-sm font-medium rounded-l-lg transition-all ${
                 period === 'all' 
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              } border border-gray-200`}
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+              }`}
             >
+              <Calendar className="w-4 h-4 inline mr-1" />
               All Time
             </button>
             <button
               type="button"
               onClick={() => setPeriod('6months')}
-              className={`px-4 py-2 text-sm font-medium transition-all shadow ${
+              className={`px-4 py-2 text-sm font-medium transition-all ${
                 period === '6months' 
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              } border-t border-b border-gray-200`}
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border-t border-b border-gray-200'
+              }`}
             >
+              <Calendar className="w-4 h-4 inline mr-1" />
               6 Months
             </button>
             <button
               type="button"
               onClick={() => setPeriod('3months')}
-              className={`px-4 py-2 text-sm font-medium rounded-r-lg transition-all shadow ${
+              className={`px-4 py-2 text-sm font-medium rounded-r-lg transition-all ${
                 period === '3months' 
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600' 
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              } border border-gray-200`}
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg hover:from-purple-700 hover:to-purple-600 transform hover:-translate-y-0.5' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+              }`}
             >
+              <Calendar className="w-4 h-4 inline mr-1" />
               3 Months
             </button>
           </div>
           
           <button
             onClick={handleRefresh}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-lg shadow transition-all transform hover:scale-105"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 rounded-lg shadow transition-all transform hover:-translate-y-0.5"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
@@ -153,7 +162,7 @@ const Analysis = () => {
           
           <button
             onClick={handleExportData}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 rounded-lg shadow transition-all transform hover:scale-105"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 rounded-lg shadow transition-all transform hover:-translate-y-0.5"
           >
             <Download className="mr-2 h-4 w-4" />
             Export
@@ -162,11 +171,11 @@ const Analysis = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100">
+        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100 transform hover:-translate-y-1 duration-300">
           <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
             <BarChart2 className="mr-2 h-5 w-5 text-blue-500" />
             Monthly Overview
-            <span className="ml-2 text-xs font-normal text-gray-500">
+            <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
               {period === 'all' ? 'All time' : period === '3months' ? 'Last 3 months' : 'Last 6 months'}
             </span>
           </h2>
@@ -189,7 +198,7 @@ const Analysis = () => {
           )}
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100">
+        <div className="bg-white p-6 rounded-lg shadow-md transition-all hover:shadow-lg border border-gray-100 transform hover:-translate-y-1 duration-300">
           <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
             <PieChart className="mr-2 h-5 w-5 text-amber-500" />
             Expense Categories
@@ -214,8 +223,11 @@ const Analysis = () => {
         </div>
       </div>
       
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-        <h2 className="text-lg font-medium mb-4 text-gray-800">Financial Insights</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 transition-all hover:shadow-lg transform hover:-translate-y-1 duration-300">
+        <h2 className="text-lg font-medium mb-4 text-gray-800 flex items-center">
+          <TrendingUp className="mr-2 h-5 w-5 text-purple-500" />
+          Financial Insights
+        </h2>
         
         {isLoading ? (
           <div className="animate-pulse space-y-3">
@@ -228,7 +240,7 @@ const Analysis = () => {
             {calculateInsights()}
           </div>
         ) : (
-          <p className="text-gray-500">Add more transactions to see insights about your financial habits.</p>
+          <p className="text-gray-500 p-4 bg-gray-50 rounded-lg">Add more transactions to see insights about your financial habits.</p>
         )}
       </div>
     </div>
@@ -253,7 +265,7 @@ const Analysis = () => {
     
     // Add insights based on the data
     insights.push(
-      <div key="savings-rate" className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500 shadow-sm">
+      <div key="savings-rate" className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500 shadow-sm hover:shadow transition-all">
         <h3 className="font-medium text-blue-800">Savings Rate</h3>
         <p className="text-blue-600">
           Your current savings rate is <strong>{savingsRate.toFixed(1)}%</strong> 
@@ -272,7 +284,7 @@ const Analysis = () => {
       const percentage = (largestCategory[1] / totalExpenses) * 100;
       
       insights.push(
-        <div key="largest-expense" className="p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500 shadow-sm">
+        <div key="largest-expense" className="p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500 shadow-sm hover:shadow transition-all">
           <h3 className="font-medium text-amber-800">Largest Expense Category</h3>
           <p className="text-amber-600">
             Your largest expense category is <strong>{largestCategory[0]}</strong>, 
@@ -288,7 +300,7 @@ const Analysis = () => {
     // Add a general insight based on months with data
     if (Object.keys(monthlyData).length > 1) {
       insights.push(
-        <div key="spending-trend" className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500 shadow-sm">
+        <div key="spending-trend" className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500 shadow-sm hover:shadow transition-all">
           <h3 className="font-medium text-green-800">Spending Trends</h3>
           <p className="text-green-600">
             You have financial data for {Object.keys(monthlyData).length} months. 

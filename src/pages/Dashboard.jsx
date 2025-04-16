@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { formatCurrency } from '../lib/utils';
 import TransactionList from '../components/TransactionList';
 import MonthlyChart from '../components/MonthlyChart';
 import SpendingChart from '../components/SpendingChart';
+import { BarChart2, PieChart, ArrowRight, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -76,7 +78,12 @@ const Dashboard = () => {
       setCategoryData(categoryDataMap);
     }
     
-    setIsLoading(false);
+    // Simulate loading for smoother UX
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -86,18 +93,27 @@ const Dashboard = () => {
       {/* Summary Cards */}
       <div className="summary-cards">
         <div className="summary-card income-card">
-          <h2 className="summary-card-title">Total Income</h2>
-          <p className="summary-card-value">{formatCurrency(totalIncome)}</p>
+          <h2 className="summary-card-title flex items-center">
+            <TrendingUp className="w-4 h-4 mr-1 text-green-500" />
+            Total Income
+          </h2>
+          <p className="summary-card-value text-green-600">{formatCurrency(totalIncome)}</p>
         </div>
         
         <div className="summary-card expense-card">
-          <h2 className="summary-card-title">Total Expenses</h2>
-          <p className="summary-card-value">{formatCurrency(totalExpenses)}</p>
+          <h2 className="summary-card-title flex items-center">
+            <TrendingDown className="w-4 h-4 mr-1 text-red-500" />
+            Total Expenses
+          </h2>
+          <p className="summary-card-value text-red-600">{formatCurrency(totalExpenses)}</p>
         </div>
         
         <div className="summary-card balance-card">
-          <h2 className="summary-card-title">Current Balance</h2>
-          <p className="summary-card-value">{formatCurrency(balance)}</p>
+          <h2 className="summary-card-title flex items-center">
+            <DollarSign className="w-4 h-4 mr-1 text-blue-500" />
+            Current Balance
+          </h2>
+          <p className="summary-card-value text-blue-600">{formatCurrency(balance)}</p>
         </div>
       </div>
       
@@ -105,10 +121,14 @@ const Dashboard = () => {
       <div className="charts-section">
         <div className="chart-container">
           <div className="section-header">
-            <h2 className="section-title">Monthly Overview</h2>
+            <h2 className="section-title">
+              <BarChart2 className="h-5 w-5" /> 
+              Monthly Overview
+            </h2>
           </div>
           {isLoading ? (
             <div className="loading-container">
+              <div></div>
               <p>Loading your financial data...</p>
             </div>
           ) : Object.keys(monthlyData).length > 0 ? (
@@ -122,10 +142,14 @@ const Dashboard = () => {
         
         <div className="chart-container">
           <div className="section-header">
-            <h2 className="section-title">Expense Categories</h2>
+            <h2 className="section-title">
+              <PieChart className="h-5 w-5" />
+              Expense Categories
+            </h2>
           </div>
           {isLoading ? (
             <div className="loading-container">
+              <div></div>
               <p>Loading your expense data...</p>
             </div>
           ) : Object.keys(categoryData).length > 0 ? (
@@ -144,14 +168,13 @@ const Dashboard = () => {
           <h2 className="section-title">Recent Transactions</h2>
           <a href="/transactions" className="view-all-link">
             View All
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: '1rem', height: '1rem', marginLeft: '0.25rem' }}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
+            <ArrowRight className="ml-1" />
           </a>
         </div>
         
         {isLoading ? (
           <div className="loading-container">
+            <div></div>
             <p>Loading your recent transactions...</p>
           </div>
         ) : transactions.length > 0 ? (
