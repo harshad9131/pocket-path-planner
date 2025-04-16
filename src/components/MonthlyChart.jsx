@@ -34,18 +34,18 @@ const MonthlyChart = ({ data }) => {
             }}
             barGap={2}
             barSize={20}
-            animationDuration={800}
+            animationDuration={1200}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.7} />
             <XAxis 
               dataKey="name" 
-              axisLine={{ stroke: 'var(--muted-foreground)' }}
-              tick={{ fill: 'var(--muted-foreground)' }}
+              axisLine={{ stroke: '#64748b' }}
+              tick={{ fill: '#334155', fontWeight: 500 }}
               tickMargin={10}
             />
             <YAxis 
-              axisLine={{ stroke: 'var(--muted-foreground)' }}
-              tick={{ fill: 'var(--muted-foreground)' }}
+              axisLine={{ stroke: '#64748b' }}
+              tick={{ fill: '#334155', fontWeight: 500 }}
               tickFormatter={(value) => `$${value}`}
               width={70}
               tickMargin={8}
@@ -53,13 +53,13 @@ const MonthlyChart = ({ data }) => {
             <Tooltip 
               formatter={tooltipFormatter}
               contentStyle={{ 
-                backgroundColor: 'var(--card)',
-                borderColor: 'var(--border)',
-                borderRadius: '0.375rem',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                padding: '10px'
+                backgroundColor: 'white',
+                borderRadius: '0.5rem',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                padding: '12px',
+                border: '1px solid #e2e8f0'
               }}
-              cursor={{ fill: 'var(--muted)', opacity: 0.2 }}
+              cursor={{ fill: '#f1f5f9', opacity: 0.4 }}
               wrapperStyle={{ zIndex: 1000 }}
             />
             <Legend 
@@ -69,11 +69,11 @@ const MonthlyChart = ({ data }) => {
             />
             <Bar 
               dataKey="Income" 
-              fill="#22c55e" /* Green */
+              fill="#10b981" /* Green */
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
               animationDuration={1500}
-              animationEasing="ease"
+              animationEasing="ease-out"
             />
             <Bar 
               dataKey="Expenses" 
@@ -81,23 +81,23 @@ const MonthlyChart = ({ data }) => {
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
               animationDuration={1500}
-              animationEasing="ease"
+              animationEasing="ease-out"
               animationBegin={100}
             />
             <Bar 
               dataKey="Savings" 
-              fill="#0ea5e9" /* Blue */
+              fill="#3b82f6" /* Blue */
               radius={[4, 4, 0, 0]} 
               className="hover:opacity-90 transition-opacity"
               animationDuration={1500}
-              animationEasing="ease"
+              animationEasing="ease-out"
               animationBegin={200}
             />
           </BarChart>
         </ResponsiveContainer>
       ) : (
-        <div className="flex items-center justify-center h-full bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No data available</p>
+        <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-inner">
+          <p className="text-gray-500 font-medium">No data available</p>
         </div>
       )}
     </div>

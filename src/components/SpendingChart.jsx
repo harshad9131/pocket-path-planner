@@ -25,7 +25,7 @@ const SpendingChart = ({ data }) => {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        className="text-xs font-medium"
+        className="text-sm font-semibold"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -37,7 +37,7 @@ const SpendingChart = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-[350px]">
+    <div className="w-full h-[350px] flex items-center justify-center">
       {chartData.length > 0 ? (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -51,27 +51,27 @@ const SpendingChart = ({ data }) => {
               innerRadius="40%"
               paddingAngle={2}
               dataKey="value"
-              stroke="var(--background)"
-              strokeWidth={2}
+              stroke="#ffffff"
+              strokeWidth={3}
               animationBegin={200}
-              animationDuration={1000}
+              animationDuration={1500}
             >
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
                   fill={entry.fill} 
-                  className="hover:opacity-90 transition-opacity"
+                  className="drop-shadow-lg hover:opacity-90 transition-opacity"
                 />
               ))}
             </Pie>
             <Tooltip 
               formatter={tooltipFormatter} 
               contentStyle={{ 
-                backgroundColor: 'var(--card)',
-                borderColor: 'var(--border)',
-                borderRadius: '0.375rem',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                padding: '10px'
+                backgroundColor: 'white',
+                borderRadius: '0.5rem',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                padding: '12px',
+                border: '1px solid #e2e8f0'
               }}
               wrapperStyle={{ zIndex: 1000 }}
             />
@@ -81,13 +81,13 @@ const SpendingChart = ({ data }) => {
               align="center"
               wrapperStyle={{ paddingTop: 20 }}
               iconType="circle"
-              iconSize={10}
+              iconSize={12}
             />
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <div className="flex items-center justify-center h-full bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No data available</p>
+        <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg">
+          <p className="text-gray-500 font-medium">No data available</p>
         </div>
       )}
     </div>
